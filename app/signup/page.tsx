@@ -10,6 +10,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import toast from "react-hot-toast";
 
 const credentialSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -33,7 +34,7 @@ export default function Signup() {
     });
 
     if (!result.success) {
-      return console.error(result.error.errors);
+      toast.error("Invalid inputs or username and password is already taken");
     }
 
     const res = await fetch("/api/user", {
@@ -47,10 +48,11 @@ export default function Signup() {
     console.log(res);
 
     if (res.ok) {
+      toast.success("Account created successfully");
       router.push("/signin")
     }
     else {
-      console.error("Registration Failed");
+      toast.error("Registration Failed");
     }
   };
 

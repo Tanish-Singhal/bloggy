@@ -11,6 +11,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
@@ -27,9 +28,11 @@ export default function Signin() {
     console.log(res);
     
     if (res?.error) {
+      toast.error("Login Failed, check your email and password");
       console.error("Login Failed, check your email and password");
     }
     else {
+      toast.success("Login successful");
       router.push("/browse");
     }
   };
