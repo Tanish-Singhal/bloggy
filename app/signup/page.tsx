@@ -9,6 +9,13 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@radix-ui/react-separator";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { z } from "zod";
+
+const credentialSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+  username: z.string().min(4, "Username must be at least 4 characters long"),
+});
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -18,6 +25,16 @@ export default function Signup() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const result = credentialSchema.safeParse({
+      username: username,
+      email: email,
+      password: password,
+    });
+
+    if (!result.success) {
+      return console.error(result.error.errors);
+    }
 
     const res = await fetch("/api/user", {
       method: "POST",
@@ -38,9 +55,9 @@ export default function Signup() {
   };
 
   return (
-    <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px] flex justify-center">
       <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[420px] gap-6">
+        <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
               Create an Account
