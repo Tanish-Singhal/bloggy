@@ -33,7 +33,7 @@ export default function Signin() {
     }
     else {
       toast.success("Login successful");
-      router.push("/browse");
+      router.push("/home");
     }
   };
 
